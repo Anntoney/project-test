@@ -31,7 +31,6 @@ jobs:
       run: |
         cd app
         pip install -r requirements.txt
-        pip install pytest pytest-asyncio httpx
     
     - name: Run tests
       run: |
@@ -41,9 +40,8 @@ jobs:
     - name: Lint Python code
       run: |
         cd app
-        pip install flake8 black
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        black --check .
+        python -m flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        python -m black --check .
 
   # Second job: validate the Terraform config
   terraform-validate:
