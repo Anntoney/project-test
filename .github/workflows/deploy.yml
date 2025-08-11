@@ -33,15 +33,20 @@ jobs:
         pip install --upgrade pip
         pip install -r requirements.txt
     
-    - name: Run simple tests first
+    - name: Run basic tests first
       run: |
         cd app
-        python -m pytest test_simple.py -v
+        python -m pytest test_basic.py -v -s
+    
+    - name: Run simple tests
+      run: |
+        cd app
+        python -m pytest test_simple.py -v -s
     
     - name: Run main tests
       run: |
         cd app
-        python -m pytest test_main.py -v
+        python -m pytest test_main.py -v -s
     
     - name: Lint Python code
       run: |
