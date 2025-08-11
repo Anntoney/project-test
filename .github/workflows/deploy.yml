@@ -12,6 +12,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: us-central1
+  AR_REGION: us-central1
   SERVICE_NAME: insight-agent
   REPOSITORY: insight-agent-repo
 
@@ -95,6 +96,10 @@ jobs:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
         project_id: ${{ secrets.GCP_PROJECT_ID }}
     
+    - name: Configure Docker for Google Artifact Registry
+      run: |
+        gcloud auth configure-docker ${{ env.AR_REGION }}-docker.pkg.dev --quiet
+    
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     
@@ -104,8 +109,8 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
-          ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:latest
+          ${{ env.AR_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+          ${{ env.AR_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
@@ -125,7 +130,7 @@ jobs:
         terraform plan \
           -var="project_id=${{ env.PROJECT_ID }}" \
           -var="region=${{ env.REGION }}" \
-          -var="container_image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:${{ github.sha }}" \
+          -var="container_image=${{ env.AR_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:${{ github.sha }}" \
           -out=tfplan
     
     - name: Terraform Apply
@@ -154,4 +159,4 @@ jobs:
       run: |
         echo "Service deployed successfully!"
         echo "Service URL: $(cd terraform && terraform output -raw service_url)"
-        echo "Image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:${{ github.sha }}" 
+        echo "Image: ${{ env.AR_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:${{ github.sha }}" 
