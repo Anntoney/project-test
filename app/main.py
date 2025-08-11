@@ -35,27 +35,33 @@ async def analyze_text(request: TextAnalysisRequest):
     Main endpoint - takes some text and spits back basic stats about it
     """
     try:
-        if not request.text.strip():
+        # Check if text is empty or only whitespace
+        if not request.text or not request.text.strip():
             raise HTTPException(status_code=400, detail="Text cannot be empty")
         
-        # Do the actual analysis - pretty simple stuff really
-        text = request.text.strip()
-        word_count = len(text.split())
-        character_count = len(text)
+        # Store original text for response
+        original_text = request.text
+        
+        # Do the actual analysis - count words and characters from original text
+        word_count = len(original_text.split())
+        character_count = len(original_text)
         
         # Import datetime here to avoid startup overhead
         from datetime import datetime
         timestamp = datetime.utcnow().isoformat()
         
-        logger.info(f"Analyzed text: {text[:50]}... (words: {word_count}, chars: {character_count})")
+        logger.info(f"Analyzed text: {original_text[:50]}... (words: {word_count}, chars: {character_count})")
         
         return TextAnalysisResponse(
-            original_text=text,
+            original_text=original_text,
             word_count=word_count,
             character_count=character_count,
             analysis_timestamp=timestamp
         )
     
+    except HTTPException:
+        # Re-raise HTTP exceptions as-is
+        raise
     except Exception as e:
         logger.error(f"Error analyzing text: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")

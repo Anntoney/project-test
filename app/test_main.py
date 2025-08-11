@@ -31,7 +31,7 @@ try:
             data = response.json()
             assert data["original_text"] == "I love cloud engineering!"
             assert data["word_count"] == 4
-            assert data["character_count"] == 23
+            assert data["character_count"] == 25  # Fixed: includes the exclamation mark
             assert "analysis_timestamp" in data
         except Exception as e:
             pytest.fail(f"Analyze text test failed: {str(e)}")
@@ -67,7 +67,7 @@ try:
             assert response.status_code == 200
             data = response.json()
             assert data["word_count"] == 3
-            assert data["character_count"] == 16
+            assert data["character_count"] == 17  # Fixed: includes comma, exclamation, and spaces
         except Exception as e:
             pytest.fail(f"Special characters test failed: {str(e)}")
 
