@@ -7,11 +7,8 @@ terraform {
     }
   }
   
-  # Store state in GCS - keeps it safe and shareable
-  backend "gcs" {
-    bucket = "insight-agent-terraform-state"
-    prefix = "terraform/state"
-  }
+  # Backend configuration moved to backend.tf
+  # We'll use local state for now during development and CI/CD
 }
 
 # Set up the Google provider - tells Terraform how to talk to GCP
