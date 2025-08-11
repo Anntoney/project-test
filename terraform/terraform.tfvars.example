@@ -8,7 +8,7 @@ project_id = "your-project-id-here"
 region = "us-central1"
 
 # Container image URL (will be set by CI/CD pipeline)
-# container_image = "us-central1-docker.pkg.dev/your-project-id/insight-agent-repo/insight-agent:latest"
+# container_image = "us-docker.pkg.dev/your-project-id/insight-agent-repo/insight-agent:latest"
 
 # Environment name
 environment = "dev" 

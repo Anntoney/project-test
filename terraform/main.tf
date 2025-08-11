@@ -28,7 +28,7 @@ resource "google_project_service" "required_apis" {
 }
 
 resource "google_artifact_registry_repository" "insight_agent_repo" {
-  location      = var.region
+  location      = "us"
   repository_id = "insight-agent-repo"
   description   = "Docker repository for Insight-Agent service"
   format        = "DOCKER"
