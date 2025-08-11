@@ -22,9 +22,9 @@ resource "google_project_service" "required_apis" {
     "compute.googleapis.com"
   ])
 
-  service = each.value
+  service                    = each.value
   disable_dependent_services = false
-  disable_on_destroy = false
+  disable_on_destroy         = false
 }
 
 resource "google_artifact_registry_repository" "insight_agent_repo" {
@@ -78,9 +78,9 @@ resource "google_cloud_run_service" "insight_agent" {
         }
       }
 
-      service_account_name = google_service_account.insight_agent_sa.email
+      service_account_name  = google_service_account.insight_agent_sa.email
       container_concurrency = 80
-      timeout_seconds      = 300
+      timeout_seconds       = 300
     }
 
     metadata {
